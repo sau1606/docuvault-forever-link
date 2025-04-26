@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { useArweave } from "@/context/ArweaveContext";
 import { Button } from "@/components/ui/button";
@@ -9,13 +8,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
 
 const DocumentUpload: React.FC = () => {
-  const { uploadDocument, connected, isLoading } = useArweave();
+  const { uploadDocument, connected, isLoading, error: contextError } = useArweave();
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [description, setDescription] = useState("");
   const [encrypt, setEncrypt] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +38,7 @@ const DocumentUpload: React.FC = () => {
       }
       
       setFile(selectedFile);
+      setUploadError(null); // Clear any previous errors when selecting a new file
     }
   };
 
@@ -78,8 +81,12 @@ const DocumentUpload: React.FC = () => {
     }
     
     setUploading(true);
+    setUploadError(null);
     
     try {
+      // Show a loading toast
+      const loadingToast = toast.loading("Uploading document to Arweave...");
+      
       // Prepare metadata tags
       const tags = {
         "Document-ID": uuidv4(),
@@ -87,11 +94,16 @@ const DocumentUpload: React.FC = () => {
         "Encrypted": encrypt.toString(),
       };
       
+      console.log("Starting document upload with tags:", tags);
+      
       // Upload document to Arweave
       const transactionId = await uploadDocument(file, tags);
       
+      // Clear the loading toast
+      toast.dismiss(loadingToast);
+      
       if (transactionId) {
-        toast.success("Document uploaded successfully");
+        toast.success(`Document uploaded successfully! Transaction ID: ${transactionId.substring(0, 8)}...`);
         // Reset form
         setFile(null);
         setDescription("");
@@ -100,10 +112,12 @@ const DocumentUpload: React.FC = () => {
           fileInputRef.current.value = "";
         }
       } else {
+        setUploadError("Failed to upload document. Please try again.");
         toast.error("Failed to upload document");
       }
     } catch (error) {
       console.error("Upload error:", error);
+      setUploadError(error instanceof Error ? error.message : "Error uploading document");
       toast.error("Error uploading document");
     } finally {
       setUploading(false);
@@ -114,6 +128,14 @@ const DocumentUpload: React.FC = () => {
     <Card className="docuvault-card">
       <CardContent className="p-6">
         <h2 className="text-2xl font-semibold mb-4">Upload Document</h2>
+        
+        {(uploadError || contextError) && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>
+              {uploadError || contextError}
+            </AlertDescription>
+          </Alert>
+        )}
         
         <div 
           className="border-2 border-dashed border-gray-300 rounded-lg p-6 mb-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
@@ -145,6 +167,7 @@ const DocumentUpload: React.FC = () => {
                   if (fileInputRef.current) {
                     fileInputRef.current.value = "";
                   }
+                  setUploadError(null);
                 }}
               >
                 Remove
@@ -201,8 +224,23 @@ const DocumentUpload: React.FC = () => {
             className="w-full bg-docuvault-primary hover:bg-docuvault-secondary"
             disabled={!file || uploading || isLoading || !connected}
           >
-            {uploading ? "Uploading..." : "Upload Document"}
+            {(uploading || isLoading) ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Uploading...
+              </>
+            ) : "Upload Document"}
           </Button>
+          
+          {connected ? (
+            <p className="text-xs text-center text-gray-500 mt-2">
+              Documents are stored permanently on the Arweave blockchain
+            </p>
+          ) : (
+            <p className="text-xs text-center text-gray-500 mt-2">
+              Please connect your ArConnect wallet to upload documents
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -2,6 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const ArConnectInfo: React.FC = () => {
   return (
@@ -13,14 +14,16 @@ const ArConnectInfo: React.FC = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="p-4 bg-blue-50 border border-blue-100 rounded-md">
-          <h3 className="font-medium text-docuvault-text">What is ArConnect?</h3>
-          <p className="text-gray-600 mt-1">
-            ArConnect is a browser extension wallet for the Arweave blockchain,
-            similar to MetaMask for Ethereum. It allows you to securely manage your
-            Arweave wallet and interact with decentralized applications.
-          </p>
-        </div>
+        <Alert className="bg-blue-50 border border-blue-100">
+          <AlertDescription>
+            <h3 className="font-medium text-docuvault-text">What is ArConnect?</h3>
+            <p className="text-gray-600 mt-1">
+              ArConnect is a browser extension wallet for the Arweave blockchain,
+              similar to MetaMask for Ethereum. It allows you to securely manage your
+              Arweave wallet and interact with decentralized applications.
+            </p>
+          </AlertDescription>
+        </Alert>
         
         <div className="space-y-2">
           <h4 className="font-medium">Installation Steps:</h4>
@@ -40,6 +43,10 @@ const ArConnectInfo: React.FC = () => {
             Get ArConnect Extension
           </Button>
         </div>
+        
+        <p className="text-xs text-center text-gray-500">
+          Note: After installation, you'll need to fund your wallet with some AR tokens to pay for document storage.
+        </p>
       </CardContent>
     </Card>
   );

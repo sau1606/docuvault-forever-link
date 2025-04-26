@@ -1,20 +1,10 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import Arweave from "arweave";
 
 // Define the ArConnect window type
 declare global {
   interface Window {
-    arweaveWallet: {
-      connect: (permissions: string[]) => Promise<void>;
-      disconnect: () => Promise<void>;
-      getActiveAddress: () => Promise<string>;
-      getPermissions: () => Promise<string[]>;
-      getActivePublicKey: () => Promise<string>;
-      signature: {
-        sign: (data: Uint8Array) => Promise<Uint8Array>;
-      };
-    };
+    arweaveWallet: any; // Using any to avoid type conflicts with arweave types
   }
 }
 
@@ -160,26 +150,35 @@ export const ArweaveProvider: React.FC<{ children: ReactNode }> = ({ children })
       transaction.addTag("Document-Name", file.name);
       transaction.addTag("Upload-Time", Date.now().toString());
 
-      // Sign the transaction through ArConnect
-      await arweave.transactions.sign(transaction);
-      
-      // Submit the transaction
-      const response = await arweave.transactions.post(transaction);
-      
-      if (response.status === 200 || response.status === 202) {
-        const newDocument: DocumentInfo = {
-          id: transaction.id,
-          name: file.name,
-          contentType: file.type,
-          size: file.size,
-          timestamp: Date.now(),
-          encrypted: false, // Set to true if encryption is implemented
-        };
+      // Log transaction before signing to help debugging
+      console.log("Transaction before signing:", transaction);
+
+      try {
+        // Sign using ArConnect
+        await window.arweaveWallet.sign(transaction);
         
-        setDocuments(prev => [...prev, newDocument]);
-        return transaction.id;
-      } else {
-        throw new Error(`Failed to upload: ${response.statusText}`);
+        // Submit the transaction
+        const response = await arweave.transactions.post(transaction);
+        console.log("Transaction response:", response);
+        
+        if (response.status === 200 || response.status === 202) {
+          const newDocument = {
+            id: transaction.id,
+            name: file.name,
+            contentType: file.type,
+            size: file.size,
+            timestamp: Date.now(),
+            encrypted: tags["Encrypted"] === "true",
+          };
+          
+          setDocuments(prev => [...prev, newDocument]);
+          return transaction.id;
+        } else {
+          throw new Error(`Failed to upload: ${response.statusText}`);
+        }
+      } catch (err) {
+        console.error("Transaction signing or submission error:", err);
+        throw err;
       }
     } catch (error) {
       console.error("Failed to upload document:", error);
