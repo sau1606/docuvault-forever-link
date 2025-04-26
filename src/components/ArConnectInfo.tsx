@@ -28,9 +28,10 @@ const ArConnectInfo: React.FC = () => {
         <div className="space-y-2">
           <h4 className="font-medium">Installation Steps:</h4>
           <ol className="list-decimal list-inside text-gray-600 space-y-1">
-            <li>Visit the ArConnect website</li>
+            <li>Visit the <a href="https://www.arconnect.io" target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">ArConnect website</a></li>
             <li>Install the browser extension for your browser</li>
             <li>Create a new wallet or import an existing one</li>
+            <li>Add funds to your wallet (required for document uploads)</li>
             <li>Return to DocuVault and connect your wallet</li>
           </ol>
         </div>
