@@ -2,15 +2,16 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import Arweave from "arweave";
 
-// Define the ArConnect window type
+// Define the ArConnect window type without conflicting with existing types
 declare global {
   interface Window {
     arweaveWallet: {
-      getActiveAddress: () => Promise<string>;
-      getPermissions: () => Promise<string[]>;
-      connect: (permissions: string[], appInfo?: any) => Promise<void>;
-      disconnect: () => Promise<void>;
-      sign: (transaction: any, options?: any) => Promise<any>;
+      // Define only the methods we actually use to avoid conflicts
+      getActiveAddress(): Promise<string>;
+      getPermissions(): Promise<string[]>;
+      connect(permissions: string[], appInfo?: any): Promise<void>;
+      disconnect(): Promise<void>;
+      sign(transaction: any): Promise<any>;
     }
   }
 }
