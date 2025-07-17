@@ -1,4 +1,4 @@
-
+// src/pages/Index.tsx
 import React, { useEffect, useState } from "react";
 import { ArweaveProvider, useArweave } from "@/context/ArweaveContext";
 import Header from "@/components/Header";
