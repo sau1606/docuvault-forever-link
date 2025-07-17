@@ -18,25 +18,25 @@ const DocumentList: React.FC = () => {
 
   const formatSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes";
-    
+
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
+
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   const getDocumentTypeIcon = (contentType: string) => {
     if (contentType.includes("pdf")) {
       return (
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="h-6 w-6 text-red-500"
         >
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -48,14 +48,14 @@ const DocumentList: React.FC = () => {
       );
     } else if (contentType.includes("word") || contentType.includes("docx")) {
       return (
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="h-6 w-6 text-blue-500"
         >
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -66,14 +66,14 @@ const DocumentList: React.FC = () => {
       );
     } else if (contentType.includes("text")) {
       return (
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="h-6 w-6 text-gray-500"
         >
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -85,14 +85,14 @@ const DocumentList: React.FC = () => {
       );
     } else {
       return (
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className="h-6 w-6 text-gray-400"
         >
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -107,9 +107,9 @@ const DocumentList: React.FC = () => {
       <CardHeader className="pb-2">
         <div className="flex justify-between items-center">
           <CardTitle className="text-2xl font-semibold">Your Documents</CardTitle>
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => fetchDocuments()}
             disabled={isLoading}
           >
@@ -119,7 +119,7 @@ const DocumentList: React.FC = () => {
       </CardHeader>
       <CardContent>
         {error && <p className="text-red-500 mb-4">{error}</p>}
-        
+
         {isLoading ? (
           <div className="flex justify-center items-center h-40">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-docuvault-primary"></div>
@@ -127,14 +127,14 @@ const DocumentList: React.FC = () => {
         ) : documents.length > 0 ? (
           <div className="space-y-4">
             {documents.map((doc) => (
-              <div 
+              <div
                 key={doc.id}
                 className="flex items-center p-3 border border-docuvault-border rounded-md hover:bg-gray-50 transition-colors"
               >
                 <div className="mr-4 flex-shrink-0">
                   {getDocumentTypeIcon(doc.contentType)}
                 </div>
-                
+
                 <div className="flex-grow min-w-0">
                   <h3 className="text-lg font-medium text-docuvault-text truncate" title={doc.name}>
                     {doc.name}
@@ -144,14 +144,14 @@ const DocumentList: React.FC = () => {
                     <span>Uploaded {formatTimestamp(doc.timestamp)}</span>
                     {doc.encrypted && (
                       <span className="ml-3 inline-flex items-center">
-                        <svg 
-                          xmlns="http://www.w3.org/2000/svg" 
-                          viewBox="0 0 24 24" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          strokeWidth="2" 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           className="h-4 w-4 mr-1"
                         >
                           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -162,23 +162,23 @@ const DocumentList: React.FC = () => {
                     )}
                   </div>
                 </div>
-                
+
                 <div className="ml-4">
                   <a
-                    href={`https://viewblock.io/arweave/tx/${doc.id}`}
+                    href={`https://arweave.net/${doc.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-docuvault-primary hover:text-docuvault-secondary mr-2"
                     title="View on ViewBlock"
                   >
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className="h-5 w-5"
                     >
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -193,14 +193,14 @@ const DocumentList: React.FC = () => {
                     className="text-docuvault-primary hover:text-docuvault-secondary"
                     title="Download"
                   >
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className="h-5 w-5"
                     >
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -214,14 +214,14 @@ const DocumentList: React.FC = () => {
           </div>
         ) : (
           <div className="text-center py-12 border border-dashed border-gray-300 rounded-lg">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               className="h-12 w-12 text-gray-400 mx-auto mb-4"
             >
               <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
